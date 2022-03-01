@@ -5,7 +5,7 @@ import sanomat
 
 
 
-# TODO: luo testit lopuille funktioille
+
 
 # ASCII-koodien summan testi
 def test_summaa_merkit():
@@ -25,8 +25,7 @@ def test_luo_sanoma():
 def test_pura_sanoma():
     # Sanoma on ehjä
     assert sanomat.pura_sanoma('<3000|4000|5003|3|122>','<','>', '|',127) == [['3000', '4000', '5003', '3'], 0, 'Data OK']
-    # TODO: tee loput testit missä näkyy virheilmoiukset ja koodit
-
+    
     # Sanoman alkumerkki puuttuu
     assert sanomat.pura_sanoma('3000|4000|5003|3|122>','<','>', '|',127) == [[], 1, 'Sanoma vajaa, alkumerkki puuttuu']
 
@@ -35,3 +34,6 @@ def test_pura_sanoma():
 
     # Sanomasta puuttuu joko data tai varmistussumma -> koodissa virhe ks. todo tree bug
     assert sanomat.pura_sanoma('<122>','<','>', '|',127) == [[], 3, "Sanoma ei sisällä tarvittavaa dataa, viestissä ainoastaan varmiste"]
+
+    # Sanoman varmistussumma ei täsmää
+    assert sanomat.pura_sanoma('<3000|4000|5003|3|121>','<','>', '|',127) ==[[], 4, 'Sanoma vahingoittunut, varmistussumma ei täsmää']

@@ -152,6 +152,8 @@ def take_still(cam_ix, view_scale, safe_margin, file_name, save_scale):
 
 # Quick test inside the module
 if __name__ == '__main__':
+
+    # Otetaan kuva kameralla 2 (indeksi 1), 2 x suurennos 50 px suoja-alue ja lopullinen koko 2 x
     picture_info = take_still(1, 2, 50, 'testi.jpg', 2)
     print(picture_info)
 

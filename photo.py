@@ -1,4 +1,7 @@
 # FUNCTIONS FOR WEB CAMERA IMAGE MANIPULATION
+# -------------------------------------------
+
+# MODULES AND LIBRARIES
 
 # OpenCV for image and video manipulatation
 # External library must be installed with pip: pip install opencv-python
@@ -8,8 +11,7 @@ import cv2
 # Will be automatically installed with openCV
 import numpy
 
-# TAKE STILL IMAGE WITH WEB CAMERA
-
+# TAKE A STILL IMAGE WITH WEB CAMERA
 
 def take_still(cam_ix, view_scale, safe_margin, file_name, save_scale):
     """Takes a still image with web camera and saves it as jpg. 

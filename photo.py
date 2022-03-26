@@ -149,3 +149,9 @@ def take_still(cam_ix, view_scale, safe_margin, file_name, save_scale):
     capture_info = {'original width': orig_width, 'original height': orig_height, 'final width': final_width,
                     'final height': final_height, 'channels': channels}
     return capture_info
+
+# Quick test inside the module
+if __name__ == '__main__':
+    picture_info = take_still(1, 2, 50, 'testi.jpg', 2)
+    print(picture_info)
+

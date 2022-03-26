@@ -57,8 +57,8 @@ def take_still(cam_ix, view_scale, safe_margin, file_name, save_scale):
             cv2.rectangle(frame, top_left, bottom_right, (0, 0, 255), 4)
 
             # Draw a center circle into the frame (radius 40 px, line width 1 px)
-            center_x = int(round(orig_width / 2 ,0))
-            center_y = int(round(orig_height / 2 ,0))
+            center_x = int(round(picture_width / 2 ,0))
+            center_y = int(round(picture_height / 2 ,0))
             cv2.circle(frame, (center_x, center_y), 40, (0, 0, 255), 1)
 
             # Define dividing lines for thirds to help positioning objects into safe area

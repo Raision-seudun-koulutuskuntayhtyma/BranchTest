@@ -15,7 +15,8 @@ import numpy
 
 # 1. TAKE A STILL IMAGE WITH WEB CAMERA AND SAVE IT AS JPG FILE
 
-def take_still(cam_ix, view_scale, safe_margin, file_name, save_scale):
+
+def take_still(cam_ix, view_scale, margin, file_name, save_scale):
     """Takes a still image with web camera and saves it as jpg. 
     Capture window has a safe area rectangle to give propper margins for the final image.
     Lines of thirds are present in the preview window. Center point of safe area is also
@@ -24,7 +25,7 @@ def take_still(cam_ix, view_scale, safe_margin, file_name, save_scale):
     Args:
         cam_ix (int): Index of the web camera, 1st camera is 0
         view_scale (float): Factor for scaling the capture window 0,5 half size, 2 double size
-        safe_margin (int): Safety margin in pixels from the edge of the picture to the safe area rectangle 
+        margin (int): Safety margin in pixels from the edge of the picture to the safe area rectangle 
         file_name (string): name of the output file
         save_scale (float): Factor for scaling the the final image 0,5 half size, 2 double size
 
@@ -47,39 +48,40 @@ def take_still(cam_ix, view_scale, safe_margin, file_name, save_scale):
             orig_height, orig_width, channels = frame.shape
 
             # Dimensions for the video window and the still image
-            picture_width = int(round(orig_width * view_scale, 0))
-            picture_height = int(round(orig_height * view_scale, 0))
+            width = int(round(orig_width * view_scale, 0))
+            height = int(round(orig_height * view_scale, 0))
 
             # Resize the frame for preview using bicubic interpolation
-            frame = cv2.resize(frame, (picture_width, picture_height),
+            frame = cv2.resize(frame, (width, height),
                                fx=0, fy=0, interpolation=cv2.INTER_CUBIC)
 
             # Draw a red safe area rectangle into the frame (BGR colour space, line width 4 px)
-            top_left = (safe_margin, safe_margin)
-            bottom_right = (picture_width - safe_margin,
-                            picture_height - safe_margin)
+            top_left = (margin, margin)
+            bottom_right = (width - margin,
+                            height - margin)
             cv2.rectangle(frame, top_left, bottom_right, (0, 0, 255), 4)
 
             # Draw a center circle into the frame (radius 40 px, line width 1 px)
-            center_x = int(round(picture_width / 2 ,0))
-            center_y = int(round(picture_height / 2 ,0))
+            center_x = int(round(width / 2, 0))
+            center_y = int(round(height / 2, 0))
             cv2.circle(frame, (center_x, center_y), 40, (0, 0, 255), 1)
 
             # Define dividing lines for thirds to help positioning objects into safe area
 
             # Calculate starting and ending coordinates for vertical lines
-            safe_area_width = int(round(picture_width - safe_margin * 2 , 0))
-            safe_area_height = int(round(picture_height - safe_margin * 2, 0))
+            safe_area_width = int(round(width - margin * 2, 0))
+            safe_area_height = int(round(height - margin * 2, 0))
 
-            v_line_1_top_x = int(round(safe_margin + safe_area_width / 3, 0))
-            v_line_1_top_y = safe_margin
-            v_line_1_bottom_x = int(round(safe_margin + safe_area_width / 3, 0)) 
-            v_line_1_bottom_y = picture_height - safe_margin
+            v_line_1_top_x = int(round(margin + safe_area_width / 3, 0))
+            v_line_1_top_y = margin
+            v_line_1_bottom_x = int(round(margin + safe_area_width / 3, 0))
+            v_line_1_bottom_y = height - margin
 
-            v_line_2_top_x = int(round(safe_margin + safe_area_width / 3 * 2 , 0 ))
-            v_line_2_top_y = safe_margin
-            v_line_2_bottom_x = int(round(safe_margin + safe_area_width / 3 * 2,  0))
-            v_line_2_bottom_y = picture_height - safe_margin
+            v_line_2_top_x = int(round(margin + safe_area_width / 3 * 2, 0))
+            v_line_2_top_y = margin
+            v_line_2_bottom_x = int(
+                round(margin + safe_area_width / 3 * 2,  0))
+            v_line_2_bottom_y = height - margin
 
             # Create end points for vertical lines
             v_line_1_top = (v_line_1_top_x, v_line_1_top_y)
@@ -89,15 +91,15 @@ def take_still(cam_ix, view_scale, safe_margin, file_name, save_scale):
             v_line_2_bottom = (v_line_2_bottom_x, v_line_2_bottom_y)
 
             # Calculate starting and ending coordinates for horizontal lines
-            h_line_1_left_x = safe_margin
-            h_line_1_left_y = int(round(safe_margin + safe_area_height / 3, 0))
-            h_line_1_right_x = safe_margin + safe_area_width
-            h_line_1_right_y = int(round(safe_margin + safe_area_height / 3, 0))
+            h_line_1_left_x = margin
+            h_line_1_left_y = int(round(margin + safe_area_height / 3, 0))
+            h_line_1_right_x = margin + safe_area_width
+            h_line_1_right_y = int(round(margin + safe_area_height / 3, 0))
 
-            h_line_2_left_x = safe_margin
-            h_line_2_left_y = int(round(safe_margin + safe_area_height / 3 * 2, 0))
-            h_line_2_right_x = safe_margin + safe_area_width
-            h_line_2_right_y = int(round(safe_margin + safe_area_height / 3 * 2, 0))
+            h_line_2_left_x = margin
+            h_line_2_left_y = int(round(margin + safe_area_height / 3 * 2, 0))
+            h_line_2_right_x = margin + safe_area_width
+            h_line_2_right_y = int(round(margin + safe_area_height / 3 * 2, 0))
 
             # Create end points for horizontal lines
             h_line_1_left = (h_line_1_left_x, h_line_1_left_y)
@@ -154,10 +156,112 @@ def take_still(cam_ix, view_scale, safe_margin, file_name, save_scale):
                     'final height': final_height, 'channels': channels}
     return capture_info
 
-# QUICK TESTS INSIDE THIS MODULE TO BE REMOVED IN PRODUCTION
+# 2. CREATE VIEW FINDER GRAPHICS FOR A WEBCAM
+
+
+def create_view_finder(frame, width, height, margin, color):
+    """Create a view finder graphics to wideo stream. Contains a safe area rectangle,
+    lines of thrirds and a center circle
+
+    Args:
+        frame (pixel matrix): video frame to draw
+        width (int): width of the video frame in pixels
+        height (int): height of the video frame in pixels
+        margin (int): distance from edge of the frame to the safe area rectangle in pixels
+        color (list): BGR-color of the view finder
+    """
+    # Draw a safe area rectangle into the frame (BGR colour space, line width 4 px)
+    top_left = (margin, margin)
+    bottom_right = (width - margin,
+                    height - margin)
+    cv2.rectangle(frame, top_left, bottom_right, color, 4)
+
+    # Draw a center circle into the frame (radius 1/12 of the frame height, line width 1 px)
+    center_x = int(round(width / 2, 0))
+    center_y = int(round(height / 2, 0))
+    circle_radius = int(round(height / 12, 0))
+    cv2.circle(frame, (center_x, center_y), circle_radius, color, 1)
+
+    # Define dividing lines for thirds to help positioning objects into safe area
+
+    # Calculate starting and ending coordinates for vertical lines
+    safe_area_width = int(round(width - margin * 2, 0))
+    safe_area_height = int(round(height - margin * 2, 0))
+
+    v_line_1_top_x = int(round(margin + safe_area_width / 3, 0))
+    v_line_1_top_y = margin
+    v_line_1_bottom_x = int(round(margin + safe_area_width / 3, 0))
+    v_line_1_bottom_y = height - margin
+
+    v_line_2_top_x = int(round(margin + safe_area_width / 3 * 2, 0))
+    v_line_2_top_y = margin
+    v_line_2_bottom_x = int(round(margin + safe_area_width / 3 * 2,  0))
+    v_line_2_bottom_y = height - margin
+
+    # Create end points for vertical lines
+    v_line_1_top = (v_line_1_top_x, v_line_1_top_y)
+    v_line_1_bottom = (v_line_1_bottom_x, v_line_1_bottom_y)
+
+    v_line_2_top = (v_line_2_top_x, v_line_2_top_y)
+    v_line_2_bottom = (v_line_2_bottom_x, v_line_2_bottom_y)
+
+    # Calculate starting and ending coordinates for horizontal lines
+    h_line_1_left_x = margin
+    h_line_1_left_y = int(round(margin + safe_area_height / 3, 0))
+    h_line_1_right_x = margin + safe_area_width
+    h_line_1_right_y = int(round(margin + safe_area_height / 3, 0))
+
+    h_line_2_left_x = margin
+    h_line_2_left_y = int(round(margin + safe_area_height / 3 * 2, 0))
+    h_line_2_right_x = margin + safe_area_width
+    h_line_2_right_y = int(round(margin + safe_area_height / 3 * 2, 0))
+
+    # Create end points for horizontal lines
+    h_line_1_left = (h_line_1_left_x, h_line_1_left_y)
+    h_line_1_right = (h_line_1_right_x, h_line_1_right_y)
+
+    h_line_2_left = (h_line_2_left_x, h_line_2_left_y)
+    h_line_2_right = (h_line_2_right_x, h_line_2_right_y)
+
+    # Draw lines for thirds, line width 1 px
+    cv2.line(frame, v_line_1_top, v_line_1_bottom, color, 1)
+    cv2.line(frame, v_line_2_top, v_line_2_bottom, color, 1)
+    cv2.line(frame, h_line_1_left, h_line_1_right, color, 1)
+    cv2.line(frame, h_line_2_left, h_line_2_right, color, 1)
+
+# 3.GET BGR COLOR VALUES BY COMMON COLOR NAMES
+def color_bgr_values(color_name):
+    """Function returns BGR values of given color name
+
+    Args:
+        color_name (string): common name of the color
+
+    Returns:
+        list: list of BGR values
+    """
+
+    # Dictionary of common colors and their BGR values
+    common_colors = {'red' : (0, 0, 255), 'green' : (0, 255, 0),
+                    'blue': (255, 0, 0), 'yellow' : (0, 255, 255),
+                    'violet' : (255, 0, 255), 'orange' : (0, 127, 255),
+                    'gray': (127, 127,127), 'light gray' : (181, 181, 181),
+                    'black' : (0, 0, 0), 'white' : (255, 255, 255)}
+    
+    return common_colors[color_name]
+
+# 4. SIMPLE VIDEO CAPTURE WITH WEB CAMERA
+
+# TODO: tee tämä loppuun
+def simple_video_capture(cam_ix):
+    video_stream = cv2.VideoCapture(cam_ix)
+    return frame    
+
+# QUICK TESTS INSIDE THIS MODULE TO BE REMOVED WHEN IN PRODUCTION
 if __name__ == '__main__':
 
     # Otetaan kuva kameralla 2 (indeksi 1), 2 x suurennos 50 px suoja-alue ja lopullinen koko 2 x
     picture_info = take_still(1, 2, 50, 'testi.jpg', 2)
     print(picture_info)
 
+    drawing_color = color_bgr_values('orange')
+    print('Piirtoväri on', drawing_color)

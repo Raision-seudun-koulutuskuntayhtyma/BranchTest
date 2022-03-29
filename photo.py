@@ -11,6 +11,9 @@ import cv2
 # Will be automatically installed with openCV
 import numpy
 
+# SOME GLOBAL VARIABLES TO AVOID WSCODE WARNINGS
+stop_capture = False
+
 # FUNCTIONS:
 
 # 1. TAKE A STILL IMAGE WITH WEB CAMERA AND SAVE IT AS JPG FILE
@@ -251,17 +254,87 @@ def color_bgr_values(color_name):
 
 # 4. SIMPLE VIDEO CAPTURE WITH WEB CAMERA
 
-# TODO: tee tämä loppuun
-def simple_video_capture(cam_ix):
+def video_to_still_image(file_name, cam_ix, margin, color):
+    """Captures Video from Web camera and saves the last frame as a jpg file
+
+    Args:
+        file_name (string): The name of the output file without jpg extension
+        cam_ix (integer): Web Camera index, 1st cam is 0
+        margin (integer): number of pixels from the edge of the frame to safe area
+        color (string): name of the color for the view finder graphics
+    """
     video_stream = cv2.VideoCapture(cam_ix)
-    return frame    
+    while (video_stream.isOpened()):
+    
+        # Capture the stream frame by frame, read() fuction returns true if reading is successfull and a wideo frame
+        ret, frame = video_stream.read()
+
+        # Check if capture is successfull and return a frame
+        if ret == True:
+
+            # read dimensions of the frame
+            height, width, channels = frame.shape
+            color = color_bgr_values('orange')
+
+            # Add a view finder
+            create_view_finder(frame, width, height, margin, color)
+
+            cv2.imshow('frame', frame)
+
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+
+                break  
+    
+    # Save the frame to a file
+    jpg_file = file_name + '.jpg'
+    cv2.imwrite(jpg_file, frame)
+
+# 5. SIMPLE VIDEO CAPTURE WITH WEB CAMERA FOR QT5 UI
+
+def qt_video_capture(cam_ix, margin, color):
+    """Captures Video from Web camera and returns last captured frame
+    Stops capturing when the global variable stop_capture becomes True
+
+    Args:
+        cam_ix (integer): Web Camera index, 1st cam is 0
+        margin (integer): number of pixels from the edge of the frame to safe area
+        color (string): name of the color for the view finder graphics
+    """
+    video_stream = cv2.VideoCapture(cam_ix)
+
+    while (video_stream.isOpened()):
+    
+        # Capture the stream frame by frame, read() fuction returns true if reading is successfull and a wideo frame
+        ret, frame = video_stream.read()
+
+        # Check if capture is successfull and return a frame
+        if ret == True:
+
+            # read dimensions of the frame
+            height, width, channels = frame.shape
+            color = color_bgr_values('orange')
+
+            # Add a view finder
+            create_view_finder(frame, width, height, margin, color)
+
+            cv2.imshow('frame', frame)
+
+            # Stop caputing whden global variable stop_capture is True
+            if stop_capture == True:
+                break  
+    return frame
+    
 
 # QUICK TESTS INSIDE THIS MODULE TO BE REMOVED WHEN IN PRODUCTION
 if __name__ == '__main__':
 
     # Otetaan kuva kameralla 2 (indeksi 1), 2 x suurennos 50 px suoja-alue ja lopullinen koko 2 x
-    picture_info = take_still(1, 2, 50, 'testi.jpg', 2)
-    print(picture_info)
+    #picture_info = take_still(0, 1, 50, 'testi.jpg', 1)
+    #print(picture_info)
 
     drawing_color = color_bgr_values('orange')
     print('Piirtoväri on', drawing_color)
+
+    video = video_to_still_image('KoTu 12345', 0, 30, 'orange')
+
+    

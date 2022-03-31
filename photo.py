@@ -264,6 +264,7 @@ def video_to_still_image(file_name, cam_ix, margin, color):
         color (string): name of the color for the view finder graphics
     """
     video_stream = cv2.VideoCapture(cam_ix)
+    stop_capture_flag = False
     while (video_stream.isOpened()):
     
         # Capture the stream frame by frame, read() fuction returns true if reading is successfull and a wideo frame
@@ -312,16 +313,18 @@ def qt_video_capture(cam_ix, margin, color):
 
             # read dimensions of the frame
             height, width, channels = frame.shape
-            color = color_bgr_values('orange')
+            vf_color = color_bgr_values(color)
 
             # Add a view finder
-            create_view_finder(frame, width, height, margin, color)
+            create_view_finder(frame, width, height, margin, vf_color)
 
-            cv2.imshow('frame', frame)
+            cv2.imshow('frame -PRESS q TO EXIT', frame)
 
             # Stop caputing whden global variable stop_capture is True
-            if stop_capture == True:
-                break  
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+    
+                break 
+    # return frame
     return frame
     
 

@@ -2,6 +2,7 @@
 
 # LIBRARIES AND MODULES
 from PyQt5 import QtWidgets, uic # For the UI
+from PyQt5.QtGui import QPixmap
 import sys # For accessing system parameters
 import photo # For vido processing functions
 
@@ -19,20 +20,20 @@ class Ui(QtWidgets.QMainWindow):
         uic.loadUi('productPicture.ui', self)
 
         # PROPERTIES FOR WORKFLOW
-        self.stop_straming = False
+        self.stop_capture_flag = False
         self.image_saved = False
 
         # UI OBJECTS
 
         # Set all buttons inital state to disabled
         self.startCaptureButton.setEnabled(False)
-        self.takeStillButton.setEnabled(False)
+        # self.takeStillButton.setEnabled(False)
 
         # Controls and their corresponding UI elements (direct assignment to properties)
         self.product = self.productId
  
         # Indicators (direct assignment to properties)
-        self.picture = self.productImage
+        self.picture = self.kuvanPaikka
         
 
         # SIGNALS & SLOTS
@@ -44,7 +45,8 @@ class Ui(QtWidgets.QMainWindow):
         self.product.textChanged.connect(self.show_start_button) 
 
         # Ota kuva button signal to exit capture mode and save the image -> call save_image function
-       
+        self.takeStillButton.clicked.connect(self.take_picture)
+
         # MAKE UI VISIBLE
         self.show()
 
@@ -55,17 +57,26 @@ class Ui(QtWidgets.QMainWindow):
 
         # Read the value of productId text field
         file_name = self.product.text()
+        self.stop_capture_flag = False
         
         # Start Video Capture 
         # TODO: Muuta uudempaan funktioon qt_video_capture(cam_ix, margin, color)
-        photo.video_to_still_image(file_name, 0, 30, 'orange')
+        # photo.video_to_still_image(file_name, 0, 30, 'orange')
+        photo.qt_video_capture(0, 20, 'yellow')
 
         # Enable Take Still button
         self.takeStillButton.setEnabled(True)
+         
+
+        # Disable Start Video Capture button
+        self.startCaptureButton.setEnabled(False)
 
     # Enable Start Capture button   
     def show_start_button(self):
-        self.startCaptureButton.setEnabled(True)    
+        self.startCaptureButton.setEnabled(True)   
+
+    def take_picture(self):
+        self.stop_capture_flag = True
 
     '''
     # Play sound

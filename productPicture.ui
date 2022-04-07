@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="startCaptureButton">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -40,7 +40,7 @@
    </widget>
    <widget class="QPushButton" name="takeStillButton">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -60,16 +60,6 @@
     </property>
     <property name="text">
      <string>Ota kuva</string>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="productImage">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>240</y>
-      <width>640</width>
-      <height>480</height>
-     </rect>
     </property>
    </widget>
    <widget class="QLineEdit" name="productId">
@@ -123,6 +113,45 @@
      <string>Tuotekuvatyökalu</string>
     </property>
    </widget>
+   <widget class="QLabel" name="kuvanPaikka">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>240</y>
+      <width>640</width>
+      <height>480</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>170</y>
+      <width>161</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>190</y>
+      <width>81</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>CheckBox</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -151,6 +180,38 @@
     <hint type="destinationlabel">
      <x>165</x>
      <y>161</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>startCaptureButton</sender>
+   <signal>clicked()</signal>
+   <receiver>takeStillButton</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>80</x>
+     <y>216</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>235</x>
+     <y>216</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>checkBox</receiver>
+   <slot>toggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>430</x>
+     <y>226</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>600</x>
+     <y>225</y>
     </hint>
    </hints>
   </connection>

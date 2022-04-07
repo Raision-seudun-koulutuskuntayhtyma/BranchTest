@@ -320,9 +320,9 @@ def qt_video_capture(cam_ix, margin, color):
 
             cv2.imshow('frame -PRESS q TO EXIT', frame)
 
-            # Stop caputing whden global variable stop_capture is True
+            # Stop caputing when key q is pressed
             if cv2.waitKey(25) & 0xFF == ord('q'):
-    
+                ret, frame = video_stream.read() # clean frame without view finder
                 break 
     # return frame
     return frame

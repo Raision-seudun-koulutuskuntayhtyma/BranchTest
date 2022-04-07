@@ -2,13 +2,13 @@
 
 # LIBRARIES AND MODULES
 
-from PyQt5 import QtWidgets, uic # For the UI
+from PyQt5 import QtWidgets, uic # For the UI, PyQT must be installed with pip first
 from PyQt5.QtGui import QPixmap # For creating pixel maps from files
 import sys # For accessing system parameters
 
 import qimage2ndarray # Library for converting between QImages and numpy arrays, must be installed with pip
 
-import cv2 # Library for imange manipulation
+import cv2 # Library for imange manipulation, must be installed with pip
 import photo # Home brew module for video capture
 
 
